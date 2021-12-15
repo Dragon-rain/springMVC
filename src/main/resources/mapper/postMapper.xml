@@ -1,0 +1,23 @@
+<?xmlversion ="1.0"encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.springMVC.repository.PostRepository">
+	<resultMap type="com.demo.springMVC.dto.Post" id="Post">
+		<result property="id" column="id" javaType="int" />
+		<result property="title" column="title" javaType="string" />
+		<result property="description" column="description" javaType="string" />
+		<result property="created" column="created" javaType="date" />
+		<result property="updated" column="updated" javaType="date" />
+		<result property="deleted" column="deleted" javaType="date" />
+		<result property="user_id" column="user_id" javaType="int" />
+	</resultMap>
+	
+	<select id="getAllPosts" resultMap="Post"> SELECT * FROM post WHERE deleted is null ORDER BY id DESC </select>
+	
+	<select id="getPostByID" resultType="Post"> SELECT * FROM post WHERE id=#{id} </select>
+
+	<insert id="addPost"> INSERT INTO post (title, description, created, user_id) VALUES (#{post.title}, #{post.description}, #{creationDate}, #{post.user_id}) </insert>
+
+	<update id="updatePost"> UPDATE post SET title = #{post.title}, description = #{post.description}, updated = #{updateDate} WHERE id= #{post.id} </update>
+
+	<update id="deletePostById"> UPDATE post SET deleted = #{deletedDate} WHERE id = #{id}</update>
+</mapper>
