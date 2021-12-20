@@ -14,11 +14,13 @@ import com.demo.springMVC.service.UserService;
 @Controller
 public class MainController {
 	
-	@Autowired
-	private PostService postService;
+	private final PostService postService;
+	private final UserService userService;
 	
-	@Autowired
-	private UserService userService;
+	public MainController(PostService postService,  UserService userService) {
+		this.postService = postService;
+		this.userService = userService;
+	}	
 	
 	@RequestMapping("/")
 	public String mainPage() {

@@ -1,6 +1,5 @@
 package com.demo.springMVC.service.serviceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.springMVC.dto.User;
@@ -13,11 +12,10 @@ import com.demo.springMVC.utils.StringEncoderUtil;
 @Service
 public class UserServiceImpl implements UserService {
 	
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 	
-	public UserServiceImpl() {
-		// TODO Auto-generated constructor stub
+	public UserServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Override

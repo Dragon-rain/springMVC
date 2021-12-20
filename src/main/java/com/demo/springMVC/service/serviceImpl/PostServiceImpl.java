@@ -2,7 +2,6 @@ package com.demo.springMVC.service.serviceImpl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.springMVC.dto.Post;
@@ -13,8 +12,11 @@ import com.demo.springMVC.utils.DateUtil;
 @Service
 public class PostServiceImpl implements PostService {
 	
-	@Autowired
-	private PostRepository postRepository;
+	private final PostRepository postRepository;
+	
+	public PostServiceImpl(PostRepository postRepository) {
+		this.postRepository = postRepository;
+	}
 
 	@Override
 	public List<Post> getAllPosts() {
