@@ -9,9 +9,9 @@
 </head>
 <body>
 	<div>
-		<a href='/springMVC/'> Main page </a>
-		<a href='/springMVC/posts'> Posts Board </a>
-		<a href='/springMVC/chat-page'> Chat room </a>
+		<a href='/SpringMVC/'> Main page </a>
+		<a href='/SpringMVC/posts'> Posts Board </a>
+		<a href='/SpringMVC/chat-page'> Chat room </a>
 	</div>
 	<h1>hello ${user.username}</h1>
 	<span>Administrator dash board</span>

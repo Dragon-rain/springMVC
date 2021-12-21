@@ -9,23 +9,23 @@
 </head>
 <body>
 	<div>
-		<a href='/springMVC/'> Main page </a>
-		<a href='/springMVC/posts'> Posts Board </a>
-		<a href='/springMVC/chat-page'> Chat room </a>
+		<a href='/SpringMVC/'> Main page </a>
+		<a href='/SpringMVC/posts'> Posts Board </a>
+		<a href='/SpringMVC/chat-page'> Chat room </a>
 	</div>
 	<h1>게시판</h1>
 	<c:if test="${user!='null' && user.role=='ADMIN'}">
-		<a href='/springMVC/administrator-page'>admin dash board</a>
+		<a href='/SpringMVC/administrator-page'>admin dash board</a>
 	</c:if>
 	<c:if test="${user!=null}">
-		<a href='/springMVC/add-post'><button>Add post</button></a>
+		<a href='/SpringMVC/add-post'><button>Add post</button></a>
 		<form action='logout' method='post'><button>Logout</button></form>
 	</c:if>
 	<table>
 		<c:if test="${not empty postsList}">
 			<c:forEach items="${postsList}" var="post">
 				<tr>
-				<th><a href='/springMVC/post?id=${post.id}'>${post.title}</a></th>
+				<th><a href='/SpringMVC/post?id=${post.id}'>${post.title}</a></th>
 				<th>${post.created}</th>
 				</tr>
 			</c:forEach>

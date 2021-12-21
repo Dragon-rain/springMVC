@@ -8,9 +8,9 @@
 </head>
 <body>
 	<div>
-		<a href='/springMVC/'> Main page </a>
-		<a href='/springMVC/posts'> Posts Board </a>
-		<a href='/springMVC/chat-page'> Chat room </a>
+		<a href='/SpringMVC/'> Main page </a>
+		<a href='/SpringMVC/posts'> Posts Board </a>
+		<a href='/SpringMVC/chat-page'> Chat room </a>
 	</div>
 	<h1 id="title" >안녕하세요!</h1>
 		<h3>Login</h3>
@@ -23,6 +23,6 @@
 			</div>
 			<button type="submit">Login</button>
 		</form>
-	<a href="/springMVC/registration"><button>회원가입</button></a>
+	<a href="/SpringMVC/registration"><button>회원가입</button></a>
 </body> 
 </html>
