@@ -12,9 +12,6 @@
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	
-	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
@@ -25,7 +22,32 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.demo.springMVC" />
+	<beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<beans:property name="mappings">
+			<beans:props>
+				<beans:prop key="/index.jsp">MainController</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	
+	<beans:bean id="MainController" class="com.demo.springMVC.controller.MainController">
+		<beans:constructor-arg ref="userService"/>
+		<beans:constructor-arg ref="postService"/>
+	</beans:bean>
+	
+	<beans:bean id="userServiceImpl" class="com.demo.springMVC.service.serviceImpl.UserServiceImpl" >
+		<beans:constructor-arg ref="userRepo"/>
+	</beans:bean>
+	
+	<beans:bean id="postServiceImpl" class="com.demo.springMVC.service.serviceImpl.PostServiceImpl" >
+		<beans:constructor-arg ref="postRepo"/>
+	</beans:bean>
+	
+	<beans:bean id="postRepo" class="com.demo.springMVC.repository.PostRepository" />
+	<beans:bean id="userRepo" class="com.demo.springMVC.repository.UserRepository" />
+	
+	<beans:bean id="userService" class="com.demo.springMVC.service.UserService"/>
+	<beans:bean id="postService" class="com.demo.springMVC.service.PostService"/>
 	
 	<context:property-placeholder location="classpath:application.properties" />
 	
