@@ -9,7 +9,7 @@ import com.demo.springMVC.service.UserService;
 import com.demo.springMVC.utils.DateUtil;
 import com.demo.springMVC.utils.StringEncoderUtil;
 
-@Service
+//@Service
 public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;

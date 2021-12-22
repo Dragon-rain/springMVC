@@ -9,7 +9,7 @@ import com.demo.springMVC.repository.PostRepository;
 import com.demo.springMVC.service.PostService;
 import com.demo.springMVC.utils.DateUtil;
 
-@Service
+//@Service
 public class PostServiceImpl implements PostService {
 	
 	private final PostRepository postRepository;
