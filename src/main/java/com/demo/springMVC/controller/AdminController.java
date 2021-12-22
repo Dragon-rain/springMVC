@@ -1,14 +1,22 @@
 package com.demo.springMVC.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@Controller
-public class AdminController {
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
+
+public class AdminController implements Controller {
 	
-	@RequestMapping("/administrator-page")
-	public String adminPage() {
-		return "AdminDashBoard";
+	/*
+	 * @RequestMapping("/administrator-page") public String adminPage() { return
+	 * "AdminDashBoard"; }
+	 */
+
+	@Override
+	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		return new ModelAndView("AdminDashBoard");
 	}
 
 }

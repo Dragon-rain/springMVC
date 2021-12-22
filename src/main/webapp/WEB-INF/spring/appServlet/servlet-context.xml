@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans
-	xmlns="http://www.springframework.org/schema/mvc"
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
@@ -14,22 +16,78 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
-
+	<!-- <annotation-driven /> -->
+	
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-	<resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<beans:property name="prefix" value="/WEB-INF/views/" />
-		<beans:property name="suffix" value=".jsp" />
-	</beans:bean>
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/">MainController</prop>
+				<prop key="/login">MainController</prop>
+				<prop key="/posts">MainController</prop>
+				<prop key="/post">MainController</prop>
+				<prop key="/registration">MainController</prop>
+				<prop key="/administrator-page">AdminController</prop>
+				<prop key="/add-post">UserController</prop>
+				<prop key="/edit-post">UserController</prop>
+				<prop key="/delete-post">UserController</prop>
+				<prop key="/chat-page">UserController</prop>
+				<prop key="/logout">UserController</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="MainController" class="com.demo.springMVC.controller.MainController">
+		<constructor-arg ref="userServiceImpl"/>
+		<constructor-arg ref="postServiceImpl"/>
+	</bean>
+	
+	<bean id="UserController" class="com.demo.springMVC.controller.UserController">
+		<constructor-arg ref="postServiceImpl"/>
+	</bean>
+	
+	<bean id="AdminController" class="com.demo.springMVC.controller.AdminController">
+	</bean>
+	
+	<bean id="userServiceImpl" class="com.demo.springMVC.service.serviceImpl.UserServiceImpl" >
+		<constructor-arg ref="userRepo"/>
+	</bean>
+	
+	<bean id="postServiceImpl" class="com.demo.springMVC.service.serviceImpl.PostServiceImpl" >
+		<constructor-arg ref="postRepo"/>
+	</bean>
+	
+	<bean id="postRepo"  class="org.mybatis.spring.mapper.MapperFactoryBean" >
+		<property name="mapperInterface" value="com.demo.springMVC.repository.PostRepository"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="userRepo" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.demo.springMVC.repository.UserRepository"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="serverSocket" class="com.demo.springMVC.controller.SocketServer"></bean>
+	
+	<websocket:handlers>
+		<websocket:mapping handler="serverSocket" path="/chat"/>
+		 <websocket:handshake-interceptors>
+         	<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+         </websocket:handshake-interceptors>
+	</websocket:handlers>
 	
 	<context:component-scan base-package="com.demo.springMVC" />
 	
 	<context:property-placeholder location="classpath:application.properties" />
 	
-	<beans:bean 
+	<bean 
 		id="dataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource"
 		p:driverClassName="${jdbc.driverClassName}" 
@@ -41,32 +99,32 @@
 		p:maxOpenPreparedStatements="${jdbc.maxOpenPreparedStatements}"
 		p:maxTotal="${jdbc.maxTotal}" />
 
-	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<beans:property name="dataSource" ref="dataSource" />
-		<beans:property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml" />
-		<beans:property name="typeAliasesPackage" value="com.demo.springMVC.dto" />
-	</beans:bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml" />
+		<property name="typeAliasesPackage" value="com.demo.springMVC.dto" />
+	</bean>
 	
-	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
-	</beans:bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
 	
 	<mybatis-spring:scan base-package="com.demo.springMVC.repository" />
 	
-	<interceptors>
-		<interceptor>
-			<mapping path="/add-post" />
-			<mapping path="/edit-post" />
-			<mapping path="/delete-post" />
-			<mapping path="/chat-page" />
-			<mapping path="/loguot" />
-			<beans:bean class="com.demo.springMVC.interceptors.UserInterceptor" />
-		</interceptor>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/add-post" />
+			<mvc:mapping path="/edit-post" />
+			<mvc:mapping path="/delete-post" />
+			<mvc:mapping path="/chat-page" />
+			<mvc:mapping path="/logout" />
+			<bean class="com.demo.springMVC.interceptors.UserInterceptor" />
+		</mvc:interceptor>
 		
-		<interceptor>
-			<mapping path="/administrator-page" />
-			<beans:bean class="com.demo.springMVC.interceptors.AdminInterceptor" />
-		</interceptor>
-	</interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/administrator-page" />
+			<bean class="com.demo.springMVC.interceptors.AdminInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 	
-</beans:beans>
+</beans>

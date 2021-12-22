@@ -10,9 +10,9 @@
 </head>
 <body>
 	<div>
-		<a href='/SpringMVC/'> Main page </a>
-		<a href='/SpringMVC/posts'> Posts Board </a>
-		<a href='/SpringMVC/chat-page'> Chat room </a>
+		<a href='/springMVC/'> Main page </a>
+		<a href='/springMVC/posts'> Posts Board </a>
+		<a href='/springMVC/chat-page'> Chat room </a>
 	</div>
 	<form method="post">
 		<div>

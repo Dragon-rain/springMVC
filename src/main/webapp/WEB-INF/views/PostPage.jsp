@@ -9,15 +9,15 @@
 </head>
 <body>
 	<div>
-		<a href='/SpringMVC/'> Main page </a>
-		<a href='/SpringMVC/posts'> Posts Board </a>
-		<a href='/SpringMVC/chat-page'> Chat room </a>
+		<a href='/springMVC/'> Main page </a>
+		<a href='/springMVC/posts'> Posts Board </a>
+		<a href='/springMVC/chat-page'> Chat room </a>
 	</div>
 	<h1>${post.title}</h1>
 	<span>${post.created}</span>
 	<div>${post.description}</div>
 	<c:if test="${not empty user && user.id == post.userId}">
-		<a href='/SpringMVC/edit-post?id=${post.id}'><button>편집 </button></a>
+		<a href='/springMVC/edit-post?id=${post.id}'><button>편집 </button></a>
 		<form action='delete-post' method='post'><input name='id' value='${post.id}' hidden='true'/><button>삭제</button></form>
 	</c:if>
 </body>
