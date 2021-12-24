@@ -1,5 +1,7 @@
 package com.demo.springMVC.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.demo.springMVC.dto.User;
@@ -15,5 +17,7 @@ public interface UserRepository {
 	void updatePassword(@Param("user") User user,@Param("newPassword") String newPassword);
 	
 	void deleteUser(@Param("user") User user);
+	
+	List<User> getUsersList();
 
 }

@@ -6,59 +6,36 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chat</title>
-        <style media="screen" type="text/css">
-        .chat {
-                width: 100%;
-                height: 200px;
-                border: 1px solid silver;
-                overflow-y: scroll;
-        }
-        #msg {width: 99%;}
-        h1 {text-align: center;}
-        </style>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/chat.css">
+        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/chat.js"></script>
     </head>
-    <script type="text/javascript">
-	    var wsUrl;
-	    if (window.location.protocol == 'http:') {
-	        wsUrl = 'ws://';
-	    } else {
-	        wsUrl = 'wss://';
-	    }
-	    var ws = new WebSocket(wsUrl + window.location.host + "/springMVC/chat");
-	        
-	    ws.onmessage = function(event) {
-	      var mySpan = document.getElementById("chat");
-	      mySpan.innerHTML+=event.data+"<br/>";
-	    };
-	     
-	    ws.onerror = function(event){
-	        console.log("Error ", event)
-	    } 
-	    function sendMsg() {
-	    	var user = document.getElementById("username").value;
-	    	console.log(user)
-	        var msg = user+": "+document.getElementById("msg").value;
-	        if(msg)
-	        {
-	            ws.send(msg);
-	        }
-	        document.getElementById("msg").value="";
-	    }
-	</script>
     <body>
+    <input id="usersCount" value='${usersList.size()}' hidden="true">
+    <input id="usersList" value="${usersList}" hidden="true">
+    <input id="user" value='${user}' hidden="true">
 		<div>
 			<a href='/springMVC/'> Main page </a>
 			<a href='/springMVC/posts'> Posts Board </a>
 			<a href='/springMVC/chat-page'> Chat room </a>
 		</div>
-        <h1>Chat room</h1>
-		<div>
-		    <div id="chat" class="chat"></div>
-		    <div>
-		    <input id="username" value="${user.username}" hidden="true">
-			<input type="text" name="msg" id="msg" placeholder="Enter message here"/>
-		        <button onclick="return sendMsg();">Enter</button>
-		    </div>
+		<div id="chat-contaner">
+			<div id="users">
+				<h3>Users:</h3>	
+				<c:forEach items="${usersList}" var="user">
+					<button class="clickable" onclick=openPrivateChat(this) value="${user.username}">${user.username}</button><br>
+				</c:forEach>	
+			</div>
+			<div class="clickable" onclick=openGlobalChat() >to Global chat</div>
+	        <h1>Chat room</h1>
+			<div id="chat-window">
+				<span id="chat-label">Global chat</span>
+			    <div id="chat" class="chat"></div>
+			    <div>
+				    <input id="username" value="${user.username}" hidden="true">
+					<input type="text" name="msg" id="msg" placeholder="Enter message here"/>
+			        <button onclick="return sendMsg();">Enter</button>
+			    </div>
+			</div>
 		</div>
     </body>
 </html>

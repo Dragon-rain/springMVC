@@ -13,15 +13,18 @@ import org.springframework.web.servlet.mvc.Controller;
 import com.demo.springMVC.dto.Post;
 import com.demo.springMVC.dto.User;
 import com.demo.springMVC.service.PostService;
+import com.demo.springMVC.service.UserService;
 
 //@Controller
 public class UserController implements Controller{
 	
 	//@Autowired
 	private final PostService postService;
+	private final UserService userService;
 	
-	public UserController(PostService postService) {
+	public UserController(PostService postService, UserService userService) {
 		this.postService = postService;
+		this.userService = userService;
 	}
 	
 	/*
@@ -67,8 +70,7 @@ public class UserController implements Controller{
 			postService.deletePostById(Integer.parseInt(request.getParameter("id"))); 
 			response.sendRedirect("/springMVC/posts");
 		} else if(request.getRequestURI().contains("/chat-page")) {
-			System.out.println("in chat");
-			return new ModelAndView("chat");
+			return new ModelAndView("chat", "usersList", userService.getUsersList());
 		} else if (request.getRequestURI().contains("/logout")) {
 			request.getSession().removeAttribute("user");
 			response.sendRedirect("/springMVC/");

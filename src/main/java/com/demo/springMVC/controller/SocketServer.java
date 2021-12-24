@@ -38,11 +38,14 @@ public class SocketServer extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
       System.out.println(("{}로 부터 {} 받음"+ session.getId()+ message.getPayload()));
+      String messagedata = message.getPayload();
       for (WebSocketSession sess : sessionList) {
         sess.sendMessage(new TextMessage(session.getId() + " : " + message.getPayload()));
       }
     }
-   
+    
+    
+    
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
       sessionList.remove(session);

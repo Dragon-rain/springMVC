@@ -1,5 +1,7 @@
 package com.demo.springMVC.service;
 
+import java.util.List;
+
 import com.demo.springMVC.dto.User;
 
 public interface UserService {
@@ -13,5 +15,7 @@ public interface UserService {
 	void updatePassword(User user, String newPassword);
 	
 	void deleteUser(User user);
+	
+	List<User> getUsersList();
 
 }

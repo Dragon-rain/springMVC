@@ -1,0 +1,45 @@
+<?xmlversion ="1.0"encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.springMVC.repository.MessageRepository">
+	<resultMap type="com.demo.springMVC.dto.GlobalMessage" id="GlobalMessage">
+		<result property="id" column="id" javaType="int" />
+		<result property="created" column="created" javaType="date" />
+		<result property="updated" column="updated" javaType="date" />
+		<result property="deleted" column="deleted" javaType="date" />
+		<result property="senderId" column="senderId" javaType="int" />
+		<result property="text" column="text" javaType="string" />
+	</resultMap>
+	
+	<resultMap type="com.demo.springMVC.dto.GroupMessage" id="GroupMessage">
+		<result property="id" column="id" javaType="int" />
+		<result property="created" column="created" javaType="date" />
+		<result property="updated" column="updated" javaType="date" />
+		<result property="deleted" column="deleted" javaType="date" />
+		<result property="senderId" column="senderId" javaType="int" />
+		<result property="text" column="text" javaType="string" />
+		<result property="chatMembers" column="chatMembers" javaType="string" />
+	</resultMap>
+	
+	<resultMap type="com.demo.springMVC.dto.PrivateMessage" id="PrivateMessage">
+		<result property="id" column="id" javaType="int" />
+		<result property="created" column="created" javaType="date" />
+		<result property="updated" column="updated" javaType="date" />
+		<result property="deleted" column="deleted" javaType="date" />
+		<result property="senderId" column="senderId" javaType="int" />
+		<result property="receiverId" column="receiverId" javaType="int" />
+		<result property="text" column="text" javaType="string" />
+	</resultMap>
+	
+	<insert id="insertGlobalMessage" >  INSERT INTO global_message (created, senderId, text) VALUES (#{message.created}, #{message.senderId}, #{message.text})</insert>
+	
+	<insert id="insertGroupMessage"> INSERT INTO group_message (created, senderId, chatRoomId, text) VALUES (#{message.created}, #{message.senderId}, #{message.chatRoomId}, #{message.text})</insert>
+
+	<insert id="insertPrivateMessage"> INSERT INTO private_message (created, senderId, receiverId, text) VALUES (#{message.created}, #{message.senderId}, #{message.recieverId}, #{message.text}) </insert>
+
+	<select id="getAllActiveGlobalMessages" resultMap="GlobalMessage">SELECT * FROM global_message WHERE deleted is null ORDER BY id DESC</select>
+	
+	<select id="getAllActiveGroupMessages" resultMap="GroupMessage">SELECT * FROM group_message WHERE deleted is null and chatRoomId=#{message.chatRoomId} ORDER BY id DESC</select>
+	
+	<select id="getAllActivePrivatelMessages" resultMap="PrivateMessage">SELECT * FROM private_message WHERE deleted is null and senderId=#{message.senderId} and receiverId=#{message.receiverId} ORDER BY id DESC</select>
+	
+</mapper>

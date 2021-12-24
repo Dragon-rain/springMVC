@@ -1,5 +1,7 @@
 package com.demo.springMVC.service.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.demo.springMVC.dto.User;
@@ -52,6 +54,12 @@ public class UserServiceImpl implements UserService {
 		user.setDeletedDate(DateUtil.getCurrentSqlDate());
 		userRepository.deleteUser(user);
 		
+	}
+
+	@Override
+	public List<User> getUsersList() {
+		// TODO Auto-generated method stub
+		return userRepository.getUsersList();
 	}
 
 }
