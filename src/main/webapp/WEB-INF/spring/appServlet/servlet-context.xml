@@ -7,16 +7,13 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xmlns:c="http://www.springframework.org/schema/c"
-	xsi:schemaLocation="http://www.springframework.org/schema/websocket 
-		http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
-		http://www.springframework.org/schema/mvc 
-		https://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://mybatis.org/schema/mybatis-spring 
-		http://mybatis.org/schema/mybatis-spring-1.2.xsd
-		http://www.springframework.org/schema/beans 
-		https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context 
-		https://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -48,9 +45,6 @@
 				<prop key="/delete-post">UserController</prop>
 				<prop key="/chat-page">UserController</prop>
 				<prop key="/logout">UserController</prop>
-				<prop key="/global">MessageController</prop>
-				<prop key="/group">MessageController</prop>
-				<prop key="/private">MessageController</prop>
 			</props>
 		</property>
 	</bean>
@@ -65,23 +59,19 @@
 		<constructor-arg ref="userServiceImpl"/>
 	</bean>
 	
-	<bean id="MessageController" class="com.demo.springMVC.controller.MessageController">
-		<constructor-arg ref="messageServiceImpl"/>
-	</bean>
-	
 	<bean id="AdminController" class="com.demo.springMVC.controller.AdminController">
 	</bean>
 	
 	<bean id="userServiceImpl" class="com.demo.springMVC.service.serviceImpl.UserServiceImpl" >
-		<constructor-arg ref="userRepo"/>
+		<property name="userRepository" ref="userRepo"></property>
 	</bean>
 	
 	<bean id="postServiceImpl" class="com.demo.springMVC.service.serviceImpl.PostServiceImpl" >
-		<constructor-arg ref="postRepo"/>
+		<property name="postRepository" ref="postRepo"></property>
 	</bean>
 	
 	<bean id="messageServiceImpl" class="com.demo.springMVC.service.serviceImpl.MessageServiceImpl" >
-		<constructor-arg ref="messageRepo"/>
+		<property name="messageRepository" ref="messageRepo"></property>
 	</bean>
 	
 	<bean id="postRepo"  class="org.mybatis.spring.mapper.MapperFactoryBean" >
@@ -98,20 +88,27 @@
 	</bean>
 	
 	
-	<bean id="serverSocket" class="com.demo.springMVC.controller.SocketServer"></bean>
+	<bean id="serverSocket" class="com.demo.springMVC.controller.SocketServer">
+		<property name="messageService" ref="messageServiceImpl"></property>
+	</bean>
+	
+	<bean id="socketServer" class="com.demo.springMVC.controller.StartServer">
+		<property name="messageService" ref="messageServiceImpl"></property>
+	</bean>
 	  
 	<websocket:handlers>
 		<websocket:mapping handler="serverSocket" path="/chat"/>
 		 <websocket:handshake-interceptors>
          	<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
          </websocket:handshake-interceptors>
+         
 	</websocket:handlers>
 	
 	<!-- <context:component-scan base-package="com.demo.springMVC" /> -->
 	
 	<context:property-placeholder location="classpath:application.properties" />
 	
-	<bean 
+	<!-- <bean 
 		id="dataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource"
 		p:driverClassName="${jdbc.driverClassName}" 
@@ -121,10 +118,14 @@
 		p:maxIdle="${jdbc.maxIdle}"
 		p:maxWaitMillis="${jdbc.maxWaitInMillis}"
 		p:maxOpenPreparedStatements="${jdbc.maxOpenPreparedStatements}"
-		p:maxTotal="${jdbc.maxTotal}" />
+		p:maxTotal="${jdbc.maxTotal}" /> -->
+		
+		<jee:jndi-lookup id="dbDataSource"
+		   jndi-name="jdbc/testdb"
+		   expected-type="javax.sql.DataSource" />
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dbDataSource" />
 		<property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml" />
 		<property name="typeAliasesPackage" value="com.demo.springMVC.dto" />
 	</bean>

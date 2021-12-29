@@ -10,9 +10,8 @@
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/chat.js"></script>
     </head>
     <body>
-    <input id="usersCount" value='${usersList.size()}' hidden="true">
-    <input id="usersList" value="${usersList}" hidden="true">
-    <input id="user" value='${user}' hidden="true">
+    <input id="usersList" value=${usersList[1]} hidden="true">
+    <input id="user" type="text" value='{"id": "${user.id}", "username": "${user.username}" }' hidden="true">
 		<div>
 			<a href='/springMVC/'> Main page </a>
 			<a href='/springMVC/posts'> Posts Board </a>
@@ -21,8 +20,8 @@
 		<div id="chat-contaner">
 			<div id="users">
 				<h3>Users:</h3>	
-				<c:forEach items="${usersList}" var="user">
-					<button class="clickable" onclick=openPrivateChat(this) value="${user.username}">${user.username}</button><br>
+				<c:forEach items="${usersList[0]}" var="user">
+					<button class="clickable" onclick=openPrivateChat(this) value='{"username": "${user.username}", "id": "${user.id}"}'>${user.username}</button><br>
 				</c:forEach>	
 			</div>
 			<div class="clickable" onclick=openGlobalChat() >to Global chat</div>
@@ -31,7 +30,6 @@
 				<span id="chat-label">Global chat</span>
 			    <div id="chat" class="chat"></div>
 			    <div>
-				    <input id="username" value="${user.username}" hidden="true">
 					<input type="text" name="msg" id="msg" placeholder="Enter message here"/>
 			        <button onclick="return sendMsg();">Enter</button>
 			    </div>

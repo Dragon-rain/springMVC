@@ -3,6 +3,12 @@ package com.demo.springMVC.dto;
 public class ChatRoom extends BaseEntity{
 	private String members;
 
+	public static ChatRoom fromMassageDataToChatRoomData(MessageData data) {
+		ChatRoom chatRoom = new ChatRoom();
+		chatRoom.setId(data.getChatId());
+		return chatRoom;
+	}
+	
 	public String getMembers() {
 		return members;
 	}

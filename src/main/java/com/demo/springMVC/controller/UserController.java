@@ -1,5 +1,8 @@
 package com.demo.springMVC.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,6 +17,7 @@ import com.demo.springMVC.dto.Post;
 import com.demo.springMVC.dto.User;
 import com.demo.springMVC.service.PostService;
 import com.demo.springMVC.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@Controller
 public class UserController implements Controller{
@@ -70,7 +74,15 @@ public class UserController implements Controller{
 			postService.deletePostById(Integer.parseInt(request.getParameter("id"))); 
 			response.sendRedirect("/springMVC/posts");
 		} else if(request.getRequestURI().contains("/chat-page")) {
-			return new ModelAndView("chat", "usersList", userService.getUsersList());
+			ObjectMapper mapper = new ObjectMapper();
+			User principal = (User)request.getSession().getAttribute("user");
+			List<User> usersList = userService.getUsersList();
+			usersList.removeIf(user -> user.getId() == principal.getId());
+			String jsonResponse = mapper.writeValueAsString(usersList);
+			List<Object> res = new ArrayList<Object>();
+			res.add(usersList);
+			res.add(jsonResponse);
+			return new ModelAndView("chat", "usersList", res);
 		} else if (request.getRequestURI().contains("/logout")) {
 			request.getSession().removeAttribute("user");
 			response.sendRedirect("/springMVC/");

@@ -1,19 +1,17 @@
 var wsUrl;
-let state ={
-	messageType: "",
+let state = {
+	messageType: "GLOBAL",
 	user: {},
-	
+	usersList: {},
+	receiver: {},
+	messageList: {}
 };
 
 window.onload = function async () {
-	let usersCount = parseInt(document.getElementById("usersCount").value);
-	let usersList = document.getElementById("usersList").value;
-	for (let i = 0; i<usersCount; i++) {
-		usersList;
-		console.log(usersList[3]);
-	}
-	let users = JSON.parse("["+usersList+"]");
-	
+	let usersList = JSON.parse(document.getElementById("usersList").value.toString());
+	let user = JSON.parse(document.getElementById("user").value.toString());
+	state = {...state, usersList, user};
+		
 };
 
 if (window.location.protocol == 'http:') {
@@ -23,11 +21,31 @@ if (window.location.protocol == 'http:') {
 };
 
 var ws = new WebSocket(wsUrl + window.location.host + "/springMVC/chat");
+
+function messageFilter(element, message) {
+	if(message.type == state.messageType) {
+		let members = [state.user.id, state.receiver.id]
+		if(state.messageType == "GLOBAL") {
+			element.innerHTML+=message.text+"<br/>"
+		} else if(state.messageType == "PRIVATE"&&members.includes(state.messageList.receiverId)&&members.includes(state.messageList.senderId)) {
+			element.innerHTML+=message.text+"<br/>"
+		}
+		
+	} else if (message.type != state.messageType) {
+		
+	}
+}
 	        
 ws.onmessage = function(event) {
-	var mySpan = document.getElementById("chat");
-	console.log(event)
-	mySpan.innerHTML+=event.data+"<br/>";
+	let mySpan = document.getElementById("chat");
+	state.messageList = JSON.parse(event.data.toString());
+	console.log(state.messageList);
+	if(Array.isArray(state.messageList)) {
+		state.messageList.map(message => mySpan.innerHTML+=message.text+"<br/>");
+	} else {
+		messageFilter(mySpan, state.messageList);
+	}
+	
 };
 	     
 ws.onerror = function(event){
@@ -35,24 +53,46 @@ ws.onerror = function(event){
 };
 
 function sendMsg() {
-	var user = document.getElementById("username").value;
-	var msg = user+": "+document.getElementById("msg").value;
-	if(msg) {
-	   ws.send(msg);
+	let messageData = {
+		senderId: state.user.id,
+		receiverId: state.receiver.id,
+		text: state.user.username+": "+document.getElementById("msg").value.toString(),
+		type: state.messageType,
+		method: "POST"
+	}
+	if(messageData.text) {
+	   ws.send(JSON.stringify(messageData));
 	}
 	document.getElementById("msg").value="";
 };
 
 function openPrivateChat(event) {
-	state.messageType = "PRIVATE";;
-	console.log(state.messageType);
-	document.getElementById("chat-label").innerHTML = "Chat with: "+event.value;
+	let receiver = JSON.parse(event.value);
+	state.messageType = "PRIVATE";
+	state.receiver = receiver;
+	let messageData = {
+		senderId: state.user.id,
+		receiverId: receiver.id,
+		type: state.messageType,
+		method: "GET"
+	}
+	document.getElementById("chat").innerHTML = "";
+	document.getElementById("chat-label").innerHTML = "Chat with: "+receiver.username;
+	ws.send(JSON.stringify(messageData));
 };
 
 function openGlobalChat() {
 	state.messageType = "GLOBAL";
-	console.log(state.messageType);
+	state.receiver = "";
+	let messageData = {
+		senderId: state.user.id,
+		receiverId: "",
+		type: state.messageType,
+		method: "GET"
+	}
+	document.getElementById("chat").innerHTML = "";
 	document.getElementById("chat-label").innerHTML = "Global Chat";
+	ws.send(JSON.stringify(messageData));
 };
 
 	

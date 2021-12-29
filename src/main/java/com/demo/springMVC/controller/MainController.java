@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import com.demo.springMVC.dto.User;
 import com.demo.springMVC.service.PostService;
 import com.demo.springMVC.service.UserService;
+import com.demo.springMVC.service.serviceImpl.PostServiceImpl;
 
 public class MainController implements Controller {
 	
@@ -46,8 +47,7 @@ public class MainController implements Controller {
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(request.getRequestURI().contains("/login")) {
 			User user = userService.userLogin(request.getParameter("username"), request.getParameter("password"));
-			System.out.println(user);
-			if(user==null) return new ModelAndView("index");;
+			if(user==null) return new ModelAndView("index");
 			if(request.getSession().getAttribute("user")!=null) request.getSession().removeAttribute("user");
 			request.getSession().setAttribute("user", user);
 			response.sendRedirect("/springMVC/posts");

@@ -2,8 +2,6 @@ package com.demo.springMVC.service.serviceImpl;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.demo.springMVC.dto.Post;
 import com.demo.springMVC.repository.PostRepository;
 import com.demo.springMVC.service.PostService;
@@ -12,9 +10,13 @@ import com.demo.springMVC.utils.DateUtil;
 //@Service
 public class PostServiceImpl implements PostService {
 	
-	private final PostRepository postRepository;
+	private PostRepository postRepository;
 	
-	public PostServiceImpl(PostRepository postRepository) {
+	public PostRepository getPostRepository() {
+		return postRepository;
+	}
+
+	public void setPostRepository(PostRepository postRepository) {
 		this.postRepository = postRepository;
 	}
 

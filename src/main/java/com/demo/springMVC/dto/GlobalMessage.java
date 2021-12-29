@@ -4,6 +4,14 @@ public class GlobalMessage extends BaseEntity{
 	
 	private int senderId;
 	private String text;
+	
+	public static GlobalMessage foromMessageDataToGlobalMessage(MessageData messageData) {
+		GlobalMessage globalMessage = new GlobalMessage();
+		globalMessage.setSenderId(messageData.getSenderId());
+		globalMessage.setText(messageData.getText());
+		return globalMessage;
+	}
+	
 	public int getSenderId() {
 		return senderId;
 	}
@@ -44,7 +52,7 @@ public class GlobalMessage extends BaseEntity{
 	}
 	@Override
 	public String toString() {
-		return "GlobalMessage [senderId=" + senderId + ", text=" + text + "]";
+		return "{ \"senderId\": \"" + senderId + "\", \"text\": \"" + text + "\"}";
 	}
 	
 }

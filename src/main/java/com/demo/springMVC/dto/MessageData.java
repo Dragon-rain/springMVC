@@ -6,6 +6,9 @@ public class MessageData {
 	private String type;
 	private int chatId;
 	private String chatMembers;
+	private int senderId;
+	private int receiverId;
+	private String method;
 	public String getText() {
 		return text;
 	}
@@ -30,12 +33,33 @@ public class MessageData {
 	public void setChatMembers(String chatMembers) {
 		this.chatMembers = chatMembers;
 	}
+	public int getSenderId() {
+		return senderId;
+	}
+	public void setSenderId(int senderId) {
+		this.senderId = senderId;
+	}
+	public int getReceiverId() {
+		return receiverId;
+	}
+	public void setReceiverId(int receiverId) {
+		this.receiverId = receiverId;
+	}
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		this.method = method;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + chatId;
 		result = prime * result + ((chatMembers == null) ? 0 : chatMembers.hashCode());
+		result = prime * result + ((method == null) ? 0 : method.hashCode());
+		result = prime * result + receiverId;
+		result = prime * result + senderId;
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -56,6 +80,15 @@ public class MessageData {
 				return false;
 		} else if (!chatMembers.equals(other.chatMembers))
 			return false;
+		if (method == null) {
+			if (other.method != null)
+				return false;
+		} else if (!method.equals(other.method))
+			return false;
+		if (receiverId != other.receiverId)
+			return false;
+		if (senderId != other.senderId)
+			return false;
 		if (text == null) {
 			if (other.text != null)
 				return false;
@@ -71,12 +104,7 @@ public class MessageData {
 	@Override
 	public String toString() {
 		return "MessageData [text=" + text + ", type=" + type + ", chatId=" + chatId + ", chatMembers=" + chatMembers
-				+ "]";
-	}
-	
-	public String toJsonString() {
-		return "{text:" + text + ", type:" + type + ", chatId:" + chatId + ", chatMembers:" + chatMembers
-				+ "}";
+				+ ", senderId=" + senderId + ", receiverId=" + receiverId + ", method=" + method + "]";
 	}
 	
 }

@@ -34,12 +34,12 @@
 	
 	<insert id="insertGroupMessage"> INSERT INTO group_message (created, senderId, chatRoomId, text) VALUES (#{message.created}, #{message.senderId}, #{message.chatRoomId}, #{message.text})</insert>
 
-	<insert id="insertPrivateMessage"> INSERT INTO private_message (created, senderId, receiverId, text) VALUES (#{message.created}, #{message.senderId}, #{message.recieverId}, #{message.text}) </insert>
+	<insert id="insertPrivateMessage"> INSERT INTO private_message (created, senderId, receiverId, text) VALUES (#{message.created}, #{message.senderId}, #{message.receiverId}, #{message.text}) </insert>
 
-	<select id="getAllActiveGlobalMessages" resultMap="GlobalMessage">SELECT * FROM global_message WHERE deleted is null ORDER BY id DESC</select>
+	<select id="getAllActiveGlobalMessages" resultMap="GlobalMessage">SELECT * FROM global_message WHERE deleted is null</select>
 	
-	<select id="getAllActiveGroupMessages" resultMap="GroupMessage">SELECT * FROM group_message WHERE deleted is null and chatRoomId=#{message.chatRoomId} ORDER BY id DESC</select>
+	<select id="getAllActiveGroupMessages" resultMap="GroupMessage">SELECT * FROM group_message WHERE deleted is null and chatRoomId=#{chatRoom.id}</select>
 	
-	<select id="getAllActivePrivatelMessages" resultMap="PrivateMessage">SELECT * FROM private_message WHERE deleted is null and senderId=#{message.senderId} and receiverId=#{message.receiverId} ORDER BY id DESC</select>
+	<select id="getAllActivePrivatelMessages" resultMap="PrivateMessage">SELECT * FROM private_message WHERE deleted is null and CONCAT(senderId, receiverId) like CONCAT('%',#{message.senderId},'%') and CONCAT(senderId, receiverId) like CONCAT('%',#{message.receiverId},'%')</select>
 	
 </mapper>

@@ -4,8 +4,6 @@ import java.util.Date;
 
 public abstract class BaseEntity {
 
-	//check 
-	//cheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeck
 	private int id;
 	private Date created;
 	private Date updated;

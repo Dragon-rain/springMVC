@@ -5,6 +5,15 @@ public class GroupMessage extends BaseEntity{
 	private int senderId;
 	private String text;
 	private int chatRoomId;
+	
+	public static GroupMessage fromMessageDataToGroupMessage(MessageData messageData) {
+		GroupMessage groupMessage = new GroupMessage();
+		groupMessage.setSenderId(messageData.getSenderId());
+		groupMessage.setText(messageData.getText());
+		groupMessage.setChatRoomId(messageData.getChatId());
+		return groupMessage;
+	}
+	
 	public int getSenderId() {
 		return senderId;
 	}

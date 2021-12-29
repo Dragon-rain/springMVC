@@ -5,6 +5,15 @@ public class PrivateMessage extends BaseEntity{
 	private int senderId;
 	private int receiverId;
 	private String text;
+	
+	public static PrivateMessage fromMessageDataToPrivateMessage(MessageData messageData) {
+		PrivateMessage privateMessage = new PrivateMessage();
+		privateMessage.setSenderId(messageData.getSenderId());
+		privateMessage.setReceiverId(messageData.getReceiverId());
+		privateMessage.setText(messageData.getText());
+		return privateMessage;
+	}
+	
 	public int getSenderId() {
 		return senderId;
 	}
@@ -54,8 +63,7 @@ public class PrivateMessage extends BaseEntity{
 	}
 	@Override
 	public String toString() {
-		return "PrivateMessage [senderId=" + senderId + ", receiverId=" + receiverId + ", text=" + text
-				+ "]";
+		return "{ \"senderId\":\"" + senderId + "\", \"receiverId\": \"" + receiverId + "\", \"text\": \"" + text+"\"}";
 	}
 	
 
